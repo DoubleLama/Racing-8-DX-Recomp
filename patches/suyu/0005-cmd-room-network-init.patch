@@ -1,12 +1,15 @@
 diff --git a/src/suyu_cmd/suyu.cpp b/src/suyu_cmd/suyu.cpp
-index 24d6d7d05..a4d8cb9e6 100644
+index 24d6d7d05..f4887f9ab 100644
 --- a/src/suyu_cmd/suyu.cpp
 +++ b/src/suyu_cmd/suyu.cpp
-@@ -2158,6 +2158,7 @@ int main(int argc, char** argv) {
- #endif
- 
-     if (use_multiplayer) {
-+        system.GetRoomNetwork().Init(); // only the Qt frontend did this, so --multiplayer never had a RoomMember
-         if (auto member = system.GetRoomNetwork().GetRoomMember().lock()) {
-             member->BindOnChatMessageReceived(OnMessageReceived);
-             member->BindOnStatusMessageReceived(OnStatusMessageReceived);
+@@ -1842,6 +1842,10 @@ int main(int argc, char** argv) {
+     SuyuCli::ExplicitUpdateProvider explicit_provider;
+     Core::System system{};
+     system.Initialize();
++    if (use_multiplayer) {
++        // Before system.Load: the BSD service binds its proxy socket to the room member when it is created.
++        system.GetRoomNetwork().Init();
++    }
+     if (!installed_nand.empty()) {
+         system.GetFileSystemController().SetSystemContentFallback(installed_nand);
+     }
