@@ -17,6 +17,10 @@ int main(int argc, char** argv) {
     // One dash is accepted too (-nolauncher, -fullscreen): easy to type that way in Steam's launch options.
     const auto has = [&](const char* name) { return args.contains(QStringLiteral("--") + QLatin1String(name)) || args.contains(QStringLiteral("-") + QLatin1String(name)); };
     if (args.contains(QStringLiteral("-f")) || has("fullscreen")) window.forceFullscreen();
+    // --multiplayer=nick[:password]@host[:port] is passed on to the engine: it joins that room for Wireless Play (LDN).
+    for (const QString& a : args) {
+        if (a.startsWith(QStringLiteral("--multiplayer="))) window.addEngineArgument(a);
+    }
     if (has("nolauncher") || has("play")) {
         if (!window.launchWithoutWindow()) return 1;
         return app.exec();

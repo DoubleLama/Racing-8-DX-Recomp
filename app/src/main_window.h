@@ -33,6 +33,7 @@ public:
     bool launchWithoutWindow();
     /// -f / --fullscreen on the command line: this run starts the game fullscreen whatever the saved setting says.
     void forceFullscreen() { force_fullscreen = true; }
+    void addEngineArgument(const QString& arg) { extra_engine_args << arg; }
     ~MainWindow() override;
 
 signals:
@@ -82,6 +83,7 @@ private:
     QLabel* status_label = nullptr;
     QCheckBox* fullscreen_check = nullptr;
     bool force_fullscreen = false;
+    QStringList extra_engine_args;
     bool headless = false;          ///< --nolauncher: no window, no questions; the game starts on its own once mod merging is done
     bool start_after_merge = false; ///< headless: launch() again when the running merge finishes
     int headless_merges = 0;        ///< headless: merges run so far (at most two: texts, then menus; never loop)
