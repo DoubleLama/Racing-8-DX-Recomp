@@ -1,0 +1,12 @@
+diff --git a/src/suyu_cmd/suyu.cpp b/src/suyu_cmd/suyu.cpp
+index 24d6d7d05..a4d8cb9e6 100644
+--- a/src/suyu_cmd/suyu.cpp
++++ b/src/suyu_cmd/suyu.cpp
+@@ -2158,6 +2158,7 @@ int main(int argc, char** argv) {
+ #endif
+ 
+     if (use_multiplayer) {
++        system.GetRoomNetwork().Init(); // only the Qt frontend did this, so --multiplayer never had a RoomMember
+         if (auto member = system.GetRoomNetwork().GetRoomMember().lock()) {
+             member->BindOnChatMessageReceived(OnMessageReceived);
+             member->BindOnStatusMessageReceived(OnStatusMessageReceived);
