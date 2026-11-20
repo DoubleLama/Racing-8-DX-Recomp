@@ -1,0 +1,22 @@
+diff --git a/src/suyu_cmd/suyu.cpp b/src/suyu_cmd/suyu.cpp
+index b49dcd1ee..504b859e3 100644
+--- a/src/suyu_cmd/suyu.cpp
++++ b/src/suyu_cmd/suyu.cpp
+@@ -2278,6 +2278,9 @@ int main(int argc, char** argv) {
+         }
+     }
+     SuyuCmd::SetNativeLaunchName(app_name_override.value_or(fallback_name));
++    // kart-recomp: the room network starts before the game's services, so the shared socket table (BsdSockets::Shared(),
++    // made while the game loads) finds the room member and delivers room packets to the game's sockets.
++    const bool room_network = Network::Init();
+     const Core::SystemResultStatus load_result{system.Load(*emu_window, filepath, load_parameters)};
+     LOG_INFO(Frontend, "suyu-cmd: system.Load returned: {}", static_cast<int>(load_result));
+ 
+@@ -2437,7 +2440,6 @@ int main(int argc, char** argv) {
+             if (!host_room) LOG_ERROR(Network, "KARTRECOMP_ROOM_HOST: expected [port][:password]");
+         }
+     }
+-    const bool room_network = Network::Init();
+     if (room_network && host_room) {
+         const char* nick_env = std::getenv("KARTRECOMP_ROOM_NICK");
+         const std::string host_nick = nick_env && KartMultiplayer::ValidNickname(nick_env) ? nick_env : "Host Player";
